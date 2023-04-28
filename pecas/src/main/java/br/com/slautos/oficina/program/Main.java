@@ -1,0 +1,88 @@
+package br.com.slautos.oficina.program;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import br.com.slautos.oficina.excel.CriaArquivoExcel;
+import br.com.slautos.oficina.pecas.Peca;
+
+public class Main {
+    private final static List<Peca> pecas = new ArrayList<>();
+    
+    public static void main(String[] args) {
+        lerCache(); // ler informações em cache, se houver
+        
+        Scanner scanner = new Scanner(System.in);
+        
+        while (true) {
+            System.out.print("Digite o nome da peça (ou 'sair' para encerrar): ");
+            String nome = scanner.nextLine();
+            
+            if (nome.equals("sair")) {
+                break;
+            }
+            
+            System.out.print("Digite a referência da peça: ");
+            String referencia = scanner.nextLine();
+            
+            System.out.print("Digite a quantidade de peças: ");
+            int quantidade = scanner.nextInt();
+            scanner.nextLine(); // consumir a quebra de linha deixada pelo nextInt()
+            
+            System.out.print("Digite o valor da peça: ");
+            String valor = scanner.nextLine();
+            
+            pecas.add(new Peca(pecas.size() + 1, nome, referencia, quantidade, valor));
+        }
+        
+        scanner.close();
+        
+        escreverCache(); // escrever informações em cache
+        
+        var criaArquivoExcel = new CriaArquivoExcel();
+        criaArquivoExcel.criarArquivo("pecas.xlsx", pecas);
+    }
+    
+    private static void escreverCache() {
+        try {
+            List<String> linhas = new ArrayList<>();
+            
+            for (Peca peca : pecas) {
+                String linha = String.format("%s;%s;%d;%s", peca.getNome(), peca.getRef(),
+                        peca.getQuantidade(), peca.getValor());
+                linhas.add(linha);
+            }
+            
+            Path arquivo = Path.of("cache.txt");
+            Files.write(arquivo, linhas);
+        } catch (Exception e) {
+            System.out.println("Erro ao escrever em cache: " + e.getMessage());
+        }
+    }
+    
+    private static void lerCache() {
+        try {
+            Path arquivo = Path.of("cache.txt");
+            
+            if (Files.exists(arquivo)) {
+                List<String> linhas = Files.readAllLines(arquivo);
+                
+                for (String linha : linhas) {
+                    String[] partes = linha.split(";");
+                    
+                    String nome = partes[0];
+                    String referencia = partes[1];
+                    int quantidade = Integer.parseInt(partes[2]);
+                    String valor = partes[3];
+                    
+                    pecas.add(new Peca(pecas.size() + 1, nome, referencia, quantidade, valor));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao ler cache: " + e.getMessage());
+        }
+    }
+}

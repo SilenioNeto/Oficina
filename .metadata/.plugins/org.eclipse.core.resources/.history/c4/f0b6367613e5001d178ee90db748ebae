@@ -1,0 +1,58 @@
+package br.com.feltex.excel.modelo;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+@AllArgsConstructor
+public class Peca {
+    private Integer id;
+    private String nome;
+    private String ref;
+    private int quantidade;
+    private String valor;
+	public Peca(Integer id, String nome, String ref, int quantidade, String valor) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.ref = ref;
+		this.quantidade = quantidade;
+		this.valor=valor;
+	}
+	
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getRef() {
+		return ref;
+	}
+	public void setRef(String ref) {
+		this.ref = ref;
+	}
+	public int getQuantidade() {
+		return quantidade;
+	}
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
+	}
+	
+}
